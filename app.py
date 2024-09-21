@@ -52,6 +52,10 @@ def search():
     return steam.apps.search_games(search_input), 200
     
 @app.route('/createlist', methods=['POST'])
+@jwt_required
 def create_list():
     data = request.get_json()
+    list_name = data.get('list_name')
+
+    lista = mongo.db.lists.insert_one({"list_name":list_name})
 
