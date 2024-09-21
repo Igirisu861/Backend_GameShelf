@@ -4,13 +4,15 @@ from models import mongo, init_db
 from flask_bcrypt import Bcrypt
 from config import Config
 from bson.json_util import ObjectId
+from steam_web_api import Steam
 
 app = Flask(__name__)
 app.config.from_object(Config)
-
 Bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
+STEAM_KEY = Config.STEAM_KEY
+steam = Steam(STEAM_KEY)
 init_db(app)
 
 @app.route('/register', methods=['POST'])
@@ -43,4 +45,13 @@ def login():
     else:
         return jsonify({"msg":"Credenciales incorrectas"}), 401
     
+@app.route('/search', methods=['POST'])
+def search():
+    data = request.get_json()
+    search_input = data.get('search_input')
+    return steam.apps.search_games(search_input), 200
+    
+@app.route('/createlist', methods=['POST'])
+def create_list():
+    data = request.get_json()
 
