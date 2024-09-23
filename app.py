@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from models import mongo, init_db
 from flask_bcrypt import Bcrypt
 from config import Config
@@ -54,8 +54,17 @@ def search():
 @app.route('/createlist', methods=['POST'])
 @jwt_required
 def create_list():
-    data = request.get_json()
-    list_name = data.get('list_name')
+    user_id = get_jwt_identity()
+    user_id = ObjectId(user_id)
 
-    lista = mongo.db.lists.insert_one({"list_name":list_name})
+    list_data = request.get_json()
+    list_name = list_data.get('list_name')
+    
+    list_data['user_id'] = user_id
+    
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
