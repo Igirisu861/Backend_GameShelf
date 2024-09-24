@@ -175,6 +175,10 @@ def show_lists():
         })
     
     return jsonify(lists), 200
+
+@app.route('/', methods=['GET'])
+def test():
+    return jsonify({'msg': 'Está vivo el backend :D'})
     
 #"nodemon" de flask
 if __name__ == '__main__':
